@@ -1,0 +1,89 @@
+/* GENERAL PAGE STYLING */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url("../images/mut.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    color: white;
+}
+
+/* SIGNUP CONTAINER */
+.signup-container {
+    background-color: rgba(0, 0, 0, 0.75); /* dark translucent box */
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+    width: 380px;
+    text-align: center;
+    margin: 80px 0;
+    color: green;
+}
+
+/* HEADING */
+.signup-container h2 {
+    color: green;
+    margin-bottom: 25px;
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+/* INPUT FIELDS */
+.signup-container input {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid green;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    background-color: #fff;
+    color: black;
+}
+
+.signup-container input:focus {
+    border-color: limegreen;
+}
+
+/* SIGNUP BUTTON */
+.signup-container button {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    width: 95%;
+    transition: background-color 0.3s;
+}
+
+.signup-container button:hover {
+    background-color: limegreen;
+}
+
+/* LOGIN LINK TEXT */
+.login-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: green;
+}
+
+.login-link a {
+    color: green;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.login-link a:hover {
+    color: limegreen;
+}

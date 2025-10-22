@@ -1,0 +1,112 @@
+/* Full page background */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../images/mut2.png");
+  background-size: cover;
+  background-position: center;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(3px); /* reduced blur */
+}
+
+/* Left text styling */
+.left-text {
+  width: 45%;
+  padding: 80px;
+  text-align: left;
+}
+
+.left-text h1 {
+  font-size: 3em;
+  line-height: 1.4;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+}
+
+/* Login container */
+.login-container {
+  width: 370px;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 50px;
+  min-height: 480px;
+  border-radius: 15px;
+  margin-right: 80px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+  color: green;
+}
+
+/* Title */
+.login-container h2 {
+  text-align: center;
+  color: green;
+  margin-bottom: 30px;
+  font-size: 1.6em;
+}
+
+/* Form group */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: green;
+  font-weight: bold;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid green;
+  border-radius: 8px;
+  outline: none;
+  background-color: #fff;
+  color: black;
+}
+
+input:focus {
+  border-color: limegreen;
+}
+
+/* Button */
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: green;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.05em;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background-color: limegreen;
+}
+
+/* Sign-up link */
+.signup-link {
+  text-align: center;
+  margin-top: 25px;
+  color: green;
+  font-size: 0.95em;
+}
+
+.signup-link a {
+  color: green;
+  text-decoration: underline;
+}
+
+.signup-link a:hover {
+  color: limegreen;
+}
