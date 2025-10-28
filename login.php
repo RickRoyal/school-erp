@@ -9,6 +9,17 @@
 <body>
   <div class="left-text">
     <h1>A Leading University in Technological Innovation, Research, and Training</h1>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+    </head>
+    <body>
+      
+    </body>
+    </html>
   </div>
 
   <div class="login-container">
