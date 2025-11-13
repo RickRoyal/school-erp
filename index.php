@@ -219,7 +219,7 @@
             line-height: 1.8;
         }
 
-        /* Key Features List */
+        
         .key-features {
             background: #f8fafc;
             padding: 5rem 2rem;
@@ -282,7 +282,7 @@
             font-size: 0.95rem;
         }
 
-        /* CTA Section */
+        
         .cta-section {
             background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
             padding: 5rem 2rem;
@@ -315,7 +315,7 @@
             box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
         }
 
-        /* Footer */
+        
         footer {
             background: #1e293b;
             color: white;
@@ -383,7 +383,7 @@
             color: #94a3b8;
         }
 
-        /* Responsive */
+        
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -405,7 +405,7 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+   
     <nav>
         <div class="nav-container">
             <a href="#" class="logo">
@@ -553,14 +553,14 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
+    
     <section class="cta-section">
         <h2>Ready to Transform Your Campus?</h2>
         <p>Join hundreds of institutions already using our ERP system</p>
         <a href="signup.php" class="btn btn-cta-white">Get Started Today</a>
     </section>
 
-    <!-- Footer -->
+    
     <footer>
         <div class="footer-container">
             <div class="footer-section">

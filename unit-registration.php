@@ -12,11 +12,11 @@ $first_name = $_SESSION['first_name'];
 $last_name = $_SESSION['last_name'];
 $initials = strtoupper(substr($first_name, 0, 1) . substr($last_name, 0, 1));
 
-// Get current academic year and semester
-$current_year = date('Y');
-$current_semester = 1; // You can make this dynamic
 
-// Handle unit registration
+$current_year = date('Y');
+$current_semester = 1; 
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register_units'])) {
     $selected_units = $_POST['units'] ?? [];
     
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register_units'])) {
             $pdo->beginTransaction();
             
             foreach ($selected_units as $unit_id) {
-                // Check if already registered
+                
                 $check_stmt = $pdo->prepare("SELECT registration_id FROM registrations 
                     WHERE student_id = :student_id AND unit_id = :unit_id 
                     AND academic_year = :year AND semester = :semester");
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register_units'])) {
                 ]);
                 
                 if ($check_stmt->rowCount() == 0) {
-                    // Register the unit
+                   
                     $insert_stmt = $pdo->prepare("INSERT INTO registrations 
                         (student_id, unit_id, academic_year, semester, registration_date, status) 
                         VALUES (:student_id, :unit_id, :year, :semester, CURDATE(), 'registered')");
@@ -61,13 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register_units'])) {
     }
 }
 
-// Get student's department
+
 $dept_stmt = $pdo->prepare("SELECT department_id FROM students WHERE student_id = :student_id");
 $dept_stmt->execute(['student_id' => $student_id]);
 $student_dept = $dept_stmt->fetch();
 $department_id = $student_dept['department_id'] ?? 1;
 
-// Get available units for this department and semester
+
 $units_stmt = $pdo->prepare("SELECT * FROM units 
     WHERE department_id = :dept_id AND semester = :semester 
     ORDER BY unit_code");
@@ -77,7 +77,7 @@ $units_stmt->execute([
 ]);
 $available_units = $units_stmt->fetchAll();
 
-// Get already registered units
+
 $registered_stmt = $pdo->prepare("SELECT unit_id FROM registrations 
     WHERE student_id = :student_id AND academic_year = :year AND semester = :semester");
 $registered_stmt->execute([
@@ -126,7 +126,7 @@ $registered_units = $registered_stmt->fetchAll(PDO::FETCH_COLUMN);
     </header>
 
     <div class="container">
-        <!-- Include the same sidebar from dashboard -->
+        
         <aside class="sidebar">
             <nav class="nav-menu">
                 <a href="dashboard.php" class="nav-item">

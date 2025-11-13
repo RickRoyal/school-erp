@@ -215,14 +215,6 @@ ALTER TABLE `registrations`
   ADD KEY `idx_registrations_unit` (`unit_id`);
 
 --
--- Indexes for table `staff`
---
-ALTER TABLE `staff`
-  ADD PRIMARY KEY (`staff_id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `user_id` (`user_id`),
-  ADD KEY `department_id` (`department_id`);
-
 --
 -- Indexes for table `students`
 --
@@ -241,14 +233,6 @@ ALTER TABLE `units`
   ADD KEY `idx_units_department` (`department_id`);
 
 --
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `department_id` (`department_id`),
-  ADD KEY `idx_users_role` (`user_role`);
 
 --
 -- AUTO_INCREMENT for dumped tables

@@ -119,7 +119,7 @@ $initials = strtoupper(substr($first_name, 0, 1) . substr($last_name, 0, 1));
             </nav>
 
             <div class="sidebar-footer">
-                <a href="#" class="nav-item logout">
+                <a href="login.php" class="nav-item logout">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                         <polyline points="16 17 21 12 16 7"/>

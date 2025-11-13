@@ -137,7 +137,7 @@ $current_gpa = $gpa_data['avg_gpa'] ? number_format($gpa_data['avg_gpa'], 2) : '
             </nav>
 
             <div class="sidebar-footer">
-                <a href="#" class="nav-item logout">
+                <a href="login.php" class="nav-item logout">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                         <polyline points="16 17 21 12 16 7"/>
@@ -217,7 +217,7 @@ $current_gpa = $gpa_data['avg_gpa'] ? number_format($gpa_data['avg_gpa'], 2) : '
     </table>
 </div>
 
-                <!-- Actions -->
+                
                 <div style="margin-top: 2rem; display: flex; gap: 1rem;">
                     <button style="padding: 0.875rem 1.5rem; background-color: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#1e40af'" onmouseout="this.style.backgroundColor='#2563eb'">
                         Download Transcript

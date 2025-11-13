@@ -40,7 +40,7 @@ Edit `db_config.php`:
 $host = 'localhost';
 $dbname = 'academic_management';
 $username = 'root';
-$password = ''; // Your MySQL password
+$password = ''; 
 ?>
 ```
 
@@ -76,10 +76,10 @@ school-erp/
 
 **500 Error?**
 ```bash
-# Check error logs
+
 tail -f /opt/lampp/logs/error_log
 
-# Fix permissions
+
 chmod -R 755 /opt/lampp/htdocs/school-erp
 ```
 

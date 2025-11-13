@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once 'config.php'; // Use PDO connection
+require_once 'config.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     
     try {
-        // Check email from DB using PDO
+        
         $sql = "SELECT student_id, password_hash, first_name, last_name FROM students WHERE email = :email";
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['email' => $email]);
@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($stmt->rowCount() == 1) {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            // Validate password
+            
             if (password_verify($password, $user['password_hash'])) {
-                // Create session with ALL required variables
+                
                 $_SESSION['logged_in'] = true;
                 $_SESSION['student_id'] = $user['student_id'];
                 $_SESSION['first_name'] = $user['first_name'];

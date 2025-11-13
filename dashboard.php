@@ -447,7 +447,7 @@ ini_set('display_errors', 0);
     </header>
 
     <div class="container">
-        <!-- Sidebar -->
+       
         <aside class="sidebar">
             <nav class="nav-menu">
                 <a href="dashboard.php" class="nav-item active">
@@ -525,9 +525,9 @@ ini_set('display_errors', 0);
             </div>
         </aside>
 
-        <!-- Main Content -->
+        
         <main class="main-content">
-            <!-- Student Welcome Section -->
+            
             <section class="student-welcome">
                 <div>
                     <h1>Welcome back, <span class="student-name"><?php echo htmlspecialchars(strtoupper($full_name)); ?></span>! 👋</h1>
@@ -640,7 +640,7 @@ ini_set('display_errors', 0);
                 </div>
             </section>
 
-            <!-- Recent Activity -->
+            
             <section class="recent-activity">
                 <h2>Recent Activity</h2>
                 <div class="activity-item">

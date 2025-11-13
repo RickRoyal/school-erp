@@ -10,14 +10,37 @@ if (!isset($_SESSION['logged_in'])) {
 $student_id = $_SESSION['student_id'];
 $first_name = $_SESSION['first_name'];
 $last_name = $_SESSION['last_name'];
+$full_name = $first_name . ' ' . $last_name;
 $initials = strtoupper(substr($first_name, 0, 1) . substr($last_name, 0, 1));
 
-// Fetch payments
+
+$student_stmt = $pdo->prepare("
+    SELECT s.*, d.department_name 
+    FROM students s 
+    LEFT JOIN departments d ON s.department_id = d.department_id 
+    WHERE s.student_id = :student_id
+");
+$student_stmt->execute(['student_id' => $student_id]);
+$student_data = $student_stmt->fetch();
+
+
+$program = $student_data['department_name'] ?? 'Not Assigned';
+
+
+$current_year = date('Y');
+$enrollment_year = $student_data['enrollment_date'] ? date('Y', strtotime($student_data['enrollment_date'])) : $current_year;
+$admission_number = "STM/" . $enrollment_year . "/" . str_pad($student_id, 4, '0', STR_PAD_LEFT);
+
+
+$years_enrolled = $current_year - $enrollment_year;
+$year_of_study = "Year " . max(1, $years_enrolled + 1);
+
+
 $stmt = $pdo->prepare("SELECT * FROM payments WHERE student_id = :student_id ORDER BY payment_date DESC");
 $stmt->execute(['student_id' => $student_id]);
 $payments = $stmt->fetchAll();
 
-// Calculate totals
+
 $total_paid = 0;
 foreach ($payments as $payment) {
     if ($payment['status'] == 'completed') {
@@ -27,6 +50,14 @@ foreach ($payments as $payment) {
 
 $semester_fee = 70000;
 $balance = $semester_fee - $total_paid;
+
+
+$semesters_enrolled = max(1, ($years_enrolled * 2) + 1);
+$total_charged = $semester_fee * $semesters_enrolled;
+
+
+$success_message = $_SESSION['success'] ?? null;
+unset($_SESSION['success']);
 ?>
 
 <!DOCTYPE html>
@@ -59,10 +90,10 @@ $balance = $semester_fee - $total_paid;
             </div>
             <div class="user-profile">
                 <div class="user-avatar"><?php echo $initials; ?></div>
-<div class="user-info">
-    <span class="user-name"><?php echo strtoupper($first_name); ?></span>
-    <span class="user-role">Student</span>
-</div>
+                <div class="user-info">
+                    <span class="user-name"><?php echo strtoupper($first_name); ?></span>
+                    <span class="user-role">Student</span>
+                </div>
             </div>
         </div>
     </header>
@@ -71,7 +102,7 @@ $balance = $semester_fee - $total_paid;
     
         <aside class="sidebar">
             <nav class="nav-menu">
-                <a href="dashboard.php" class="nav-item active">
+                <a href="dashboard.php" class="nav-item">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <rect x="3" y="3" width="7" height="7"></rect>
                         <rect x="14" y="3" width="7" height="7"></rect>
@@ -90,7 +121,7 @@ $balance = $semester_fee - $total_paid;
                         <span>Academics</span>
                     </div>
                     <svg class="arrow" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+                        <path d="M4.293 5.293a1 1 0 011.414 0L8 7.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
                     </svg>
                 </div>
                 <div id="academics-dropdown" class="dropdown-content">
@@ -107,7 +138,7 @@ $balance = $semester_fee - $total_paid;
                         <span>Financials</span>
                     </div>
                     <svg class="arrow" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+                        <path d="M4.293 5.293a1 1 0 011.414 0L8 7.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
                     </svg>
                 </div>
                 <div id="financials-dropdown" class="dropdown-content">
@@ -135,7 +166,7 @@ $balance = $semester_fee - $total_paid;
             </nav>
 
             <div class="sidebar-footer">
-                <a href="#" class="nav-item logout">
+                <a href="logout.php" class="nav-item logout">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                         <polyline points="16 17 21 12 16 7"/>
@@ -152,24 +183,30 @@ $balance = $semester_fee - $total_paid;
                 <h2>Fee Statement</h2>
                 <p>Your current fee balance and complete payment history.</p>
                 
+                <?php if ($success_message): ?>
+                    <div style="padding: 1rem; background-color: #d1fae5; border-left: 4px solid #10b981; border-radius: 8px; margin: 1rem 0; color: #065f46;">
+                        ✓ <?php echo htmlspecialchars($success_message); ?>
+                    </div>
+                <?php endif; ?>
+                
                 
                 <div style="margin: 1.5rem 0; padding: 1rem; background-color: #f8fafc; border-radius: 8px;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
                         <div>
                             <strong style="color: #64748b; font-size: 0.875rem;">Student Name:</strong><br>
-                            <span style="color: #1e293b; font-weight: 500;">ALFREDS MUIRURI</span>
+                            <span style="color: #1e293b; font-weight: 500;"><?php echo htmlspecialchars(strtoupper($full_name)); ?></span>
                         </div>
                         <div>
                             <strong style="color: #64748b; font-size: 0.875rem;">Admission Number:</strong><br>
-                            <span style="color: #1e293b; font-weight: 500;">STM/2023/0145</span>
+                            <span style="color: #1e293b; font-weight: 500;"><?php echo $admission_number; ?></span>
                         </div>
                         <div>
                             <strong style="color: #64748b; font-size: 0.875rem;">Program:</strong><br>
-                            <span style="color: #1e293b; font-weight: 500;">BSc Computer Science</span>
+                            <span style="color: #1e293b; font-weight: 500;">BSc <?php echo htmlspecialchars($program); ?></span>
                         </div>
                         <div>
                             <strong style="color: #64748b; font-size: 0.875rem;">Year of Study:</strong><br>
-                            <span style="color: #1e293b; font-weight: 500;">Year 2</span>
+                            <span style="color: #1e293b; font-weight: 500;"><?php echo $year_of_study; ?></span>
                         </div>
                     </div>
                 </div>
@@ -178,77 +215,73 @@ $balance = $semester_fee - $total_paid;
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
                     <div style="padding: 2rem; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-radius: 12px; color: white; box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);">
                         <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.5rem;">Current Balance</div>
-                        <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">KES 25,000</div>
-                        <div style="font-size: 0.875rem; opacity: 0.9;">Due: November 30, 2025</div>
+                        <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">KES <?php echo number_format($balance, 0); ?></div>
+                        <div style="font-size: 0.875rem; opacity: 0.9;">Due: November 30, <?php echo $current_year; ?></div>
                     </div>
                     
                     <div style="padding: 2rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 12px; color: white; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);">
                         <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.5rem;">Total Paid</div>
-                        <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">KES 103,000</div>
+                        <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">KES <?php echo number_format($total_paid, 0); ?></div>
                         <div style="font-size: 0.875rem; opacity: 0.9;">All time payments</div>
                     </div>
                     
                     <div style="padding: 2rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 12px; color: white; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);">
                         <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.5rem;">Total Charged</div>
-                        <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">KES 128,000</div>
-                        <div style="font-size: 0.875rem; opacity: 0.9;">2 semesters</div>
+                        <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">KES <?php echo number_format($total_charged, 0); ?></div>
+                        <div style="font-size: 0.875rem; opacity: 0.9;"><?php echo $semesters_enrolled; ?> semester<?php echo $semesters_enrolled > 1 ? 's' : ''; ?></div>
                     </div>
                 </div>
 
-                
+                <!-- Transaction History -->
                 <h3 style="margin-top: 2.5rem; margin-bottom: 1rem; color: #1e293b; font-size: 1.25rem;">Transaction History</h3>
-                <div class="content-card">
-    <h2>Fee Statement</h2>
-    <div style="margin-bottom: 1rem;">
-        <p><strong>Total Fees:</strong> KES <?php echo number_format($semester_fee, 2); ?></p>
-        <p><strong>Amount Paid:</strong> KES <?php echo number_format($total_paid, 2); ?></p>
-        <p><strong>Balance:</strong> KES <?php echo number_format($balance, 2); ?></p>
-    </div>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Method</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($payments)): ?>
-                <tr>
-                    <td colspan="5" style="text-align: center;">No payments recorded yet</td>
-                </tr>
-            <?php else: ?>
-                <?php foreach ($payments as $payment): ?>
-                    <tr>
-                        <td><?php echo date('d M Y', strtotime($payment['payment_date'])); ?></td>
-                        <td><?php echo htmlspecialchars($payment['description'] ?? 'Tuition Fee'); ?></td>
-                        <td>KES <?php echo number_format($payment['amount'], 2); ?></td>
-                        <td><?php echo ucfirst(str_replace('_', ' ', $payment['payment_method'])); ?></td>
-                        <td>
-                            <span style="padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.85rem; 
-                                  background-color: <?php echo $payment['status'] == 'completed' ? '#d1fae5' : '#fee'; ?>;
-                                  color: <?php echo $payment['status'] == 'completed' ? '#059669' : '#c33'; ?>;">
-                                <?php echo ucfirst($payment['status']); ?>
-                            </span>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-    </table>
-</div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($payments)): ?>
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 2rem; color: #64748b;">
+                                    No payments recorded yet
+                                </td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($payments as $payment): ?>
+                                <tr>
+                                    <td><?php echo date('d M Y', strtotime($payment['payment_date'])); ?></td>
+                                    <td><?php echo htmlspecialchars($payment['description'] ?? 'Tuition Fee'); ?></td>
+                                    <td>KES <?php echo number_format($payment['amount'], 2); ?></td>
+                                    <td><?php echo ucfirst(str_replace('_', ' ', $payment['payment_method'])); ?></td>
+                                    <td>
+                                        <span style="padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.85rem; 
+                                              background-color: <?php echo $payment['status'] == 'completed' ? '#d1fae5' : '#fee2e2'; ?>;
+                                              color: <?php echo $payment['status'] == 'completed' ? '#059669' : '#dc2626'; ?>;">
+                                            <?php echo ucfirst($payment['status']); ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
 
+                <?php if ($balance > 0): ?>
                 
                 <div style="margin-top: 2rem; padding: 1.5rem; background-color: #fef2f2; border-left: 4px solid #ef4444; border-radius: 8px;">
                     <h4 style="color: #991b1b; margin-bottom: 0.75rem; font-size: 1.1rem;">⚠️ Payment Reminder</h4>
                     <p style="color: #7f1d1d; line-height: 1.6;">
-                        You have an outstanding balance of <strong>KES 25,000</strong> due by <strong>November 30, 2025</strong>. 
+                        You have an outstanding balance of <strong>KES <?php echo number_format($balance, 0); ?></strong> due by <strong>November 30, <?php echo $current_year; ?></strong>. 
                         Please make payment to avoid late payment penalties and ensure uninterrupted access to academic services.
                     </p>
                 </div>
+                <?php endif; ?>
 
                 
                 <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
@@ -260,14 +293,17 @@ $balance = $semester_fee - $total_paid;
                         Make Payment
                     </button>
 
-                    <button style="padding: 0.875rem 1.5rem; background-color: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#1e40af'" onmouseout="this.style.backgroundColor='#2563eb'">
+                    <button style="padding: 0.875rem 1.5rem; background-color: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;" 
+                            onmouseover="this.style.backgroundColor='#1e40af'" 
+                            onmouseout="this.style.backgroundColor='#2563eb'"
+                            onclick="window.print()">
                         Download Statement
                     </button>
-                    <button style="padding: 0.875rem 1.5rem; background-color: white; color: #64748b; border: 2px solid #e2e8f0; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#cbd5e1'; this.style.color='#475569'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.color='#64748b'">
+                    <button style="padding: 0.875rem 1.5rem; background-color: white; color: #64748b; border: 2px solid #e2e8f0; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;" 
+                            onmouseover="this.style.borderColor='#cbd5e1'; this.style.color='#475569'" 
+                            onmouseout="this.style.borderColor='#e2e8f0'; this.style.color='#64748b'"
+                            onclick="window.print()">
                         Print Statement
-                    </button>
-                    <button style="padding: 0.875rem 1.5rem; background-color: white; color: #64748b; border: 2px solid #e2e8f0; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#cbd5e1'; this.style.color='#475569'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.color='#64748b'">
-                        Request Payment Plan
                     </button>
                 </div>
             </div>
