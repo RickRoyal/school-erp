@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-session_start();
 session_start();
 require_once 'config.php';
 
@@ -16,44 +13,49 @@ $last_name = $_SESSION['last_name'];
 $full_name = $first_name . ' ' . $last_name;
 $initials = strtoupper(substr($first_name, 0, 1) . substr($last_name, 0, 1));
 
-// Initialize default values
+// Initialize ALL variables with default values
 $course = 'Computer Science';
 $total_paid = 0;
 $current_gpa = '0.00';
+$semester_fee = 70000;
+$fee_balance = 70000;
+$current_year = date('Y');
+$current_semester = 1;
 
 try {
-    // Get department
+    // Get department (with null safety)
     $dept_stmt = $pdo->prepare("SELECT d.department_name FROM departments d INNER JOIN students s ON s.department_id = d.department_id WHERE s.student_id = :student_id");
     $dept_stmt->execute(['student_id' => $student_id]);
     $dept_data = $dept_stmt->fetch();
-    $course = $dept_data['department_name'] ?? 'Computer Science';
+    if ($dept_data && isset($dept_data['department_name'])) {
+        $course = $dept_data['department_name'];
+    }
 
-    // Calculate fee balance
+    // Calculate fee balance (with null safety)
     $payment_stmt = $pdo->prepare("SELECT SUM(amount) as total_paid FROM payments WHERE student_id = :student_id AND status = 'completed'");
     $payment_stmt->execute(['student_id' => $student_id]);
     $payment_data = $payment_stmt->fetch();
-    $total_paid = $payment_data['total_paid'] ?? 0;
+    if ($payment_data && isset($payment_data['total_paid']) && $payment_data['total_paid'] !== null) {
+        $total_paid = (float)$payment_data['total_paid'];
+    }
+    $fee_balance = $semester_fee - $total_paid;
 
-    // Calculate GPA
+    // Calculate GPA (with null safety)
     $gpa_stmt = $pdo->prepare("SELECT AVG(grade_points) as avg_gpa FROM grades WHERE student_id = :student_id");
     $gpa_stmt->execute(['student_id' => $student_id]);
     $gpa_data = $gpa_stmt->fetch();
-    $current_gpa = $gpa_data['avg_gpa'] ? number_format($gpa_data['avg_gpa'], 2) : '0.00';
+    if ($gpa_data && isset($gpa_data['avg_gpa']) && $gpa_data['avg_gpa'] !== null) {
+        $current_gpa = number_format($gpa_data['avg_gpa'], 2);
+    }
 } catch (PDOException $e) {
-    // Log error but don't break the page
     error_log("Dashboard Error: " . $e->getMessage());
+    // Keep default values if queries fail
 }
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-$semester_fee = 70000;
-$fee_balance = $semester_fee - $total_paid;
-$current_year = date('Y');
-$current_semester = 1;
+// Remove error display after debugging
+error_reporting(0);
+ini_set('display_errors', 0);
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -72,6 +74,67 @@ $current_semester = 1;
             margin-bottom: 2rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
+/* Dropdown Styles */
+.dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    background-color: #f8fafc;
+}
+
+.dropdown-content.active {
+    max-height: 500px;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+    position: relative;
+}
+
+.dropdown-toggle .arrow {
+    transition: transform 0.3s ease;
+}
+
+.dropdown-toggle.active .arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-item {
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    color: #64748b;
+    text-decoration: none;
+    display: block;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.dropdown-item:hover {
+    background-color: #e2e8f0;
+    color: #2563eb;
+    border-left-color: #2563eb;
+}
+
+.dropdown-item.active {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-left-color: #2563eb;
+    font-weight: 600;
+}
+
+/* Navigation active states */
+.nav-item.active {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-left-color: #2563eb;
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+}
 
         .student-welcome h1 {
             font-size: 2.2rem;
