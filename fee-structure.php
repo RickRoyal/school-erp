@@ -218,7 +218,7 @@ $initials = strtoupper(substr($first_name, 0, 1) . substr($last_name, 0, 1));
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.5rem;">Total Semester Fee</div>
-                            <div style="font-size: 3rem; font-weight: 700;">KES 64,000</div>
+                            <div style="font-size: 3rem; font-weight: 700;">KES 70,000</div>
                         </div>
                         <div style="text-align: right;">
                             <div style="font-size: 0.875rem; opacity: 0.9;">Payment Deadline</div>
@@ -244,7 +244,7 @@ $initials = strtoupper(substr($first_name, 0, 1) . substr($last_name, 0, 1));
                     <button style="padding: 0.875rem 1.5rem; background-color: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#1e40af'" onmouseout="this.style.backgroundColor='#2563eb'">
                         Download Fee Structure
                     </button>
-                    <button style="padding: 0.875rem 1.5rem; background-color: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#059669'" onmouseout="this.style.backgroundColor='#10b981'">
+                    <button style="padding: 0.875rem 1.5rem; background-color: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#059669'" onmouseout="this.style.backgroundColor='#10b981'"  onclick="window.location.href='make-payment.php'">
                         Proceed to Payment
                     </button>
                 </div>
