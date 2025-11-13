@@ -252,9 +252,14 @@ $balance = $semester_fee - $total_paid;
 
                 
                 <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <button style="padding: 0.875rem 1.5rem; background-color: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#059669'" onmouseout="this.style.backgroundColor='#10b981'">
+                    <button 
+                        style="padding: 0.875rem 1.5rem; background-color: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;"
+                        onmouseover="this.style.backgroundColor='#059669'" 
+                        onmouseout="this.style.backgroundColor='#10b981'" 
+                        onclick="window.location.href='make-payment.php'">
                         Make Payment
                     </button>
+
                     <button style="padding: 0.875rem 1.5rem; background-color: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#1e40af'" onmouseout="this.style.backgroundColor='#2563eb'">
                         Download Statement
                     </button>
