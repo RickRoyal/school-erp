@@ -1,4 +1,3 @@
-/* GENERAL PAGE STYLING */
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -11,24 +10,25 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center; /* Changed to center */
     overflow-y: auto;
     color: white;
 }
 
-/* SIGNUP CONTAINER */
+
 .signup-container {
-    background-color: rgba(0, 0, 0, 0.75); /* dark translucent box */
-    padding: 50px;
+    background-color: rgba(0, 0, 0, 0.75);
+    padding: 40px 50px;
     border-radius: 15px;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
     width: 380px;
+    max-width: 90%; /* Responsive on small screens */
     text-align: center;
-    margin: 80px 0;
+    margin: auto; /* Center horizontally */
     color: green;
 }
 
-/* HEADING */
+
 .signup-container h2 {
     color: green;
     margin-bottom: 25px;
@@ -36,25 +36,67 @@ body {
     font-weight: bold;
 }
 
-/* INPUT FIELDS */
-.signup-container input {
-    width: 90%;
+
+.form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: green;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+
+.signup-container input,
+.form-group input {
+    width: 100%;
     padding: 12px;
-    margin: 10px 0;
+    margin: 0;
     border: 1px solid green;
     border-radius: 6px;
     font-size: 15px;
     outline: none;
     background-color: #fff;
     color: black;
+    box-sizing: border-box;
 }
 
-.signup-container input:focus {
+.signup-container input:focus,
+.form-group input:focus {
     border-color: limegreen;
 }
 
-/* SIGNUP BUTTON */
-.signup-container button {
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid green;
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: limegreen;
+}
+
+.form-group select option {
+    padding: 0.5rem;
+    color: black;
+}
+
+
+.signup-container button,
+.signup-btn {
     background-color: green;
     color: white;
     border: none;
@@ -62,12 +104,14 @@ body {
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
-    margin-top: 10px;
-    width: 95%;
+    margin-top: 15px;
+    width: 100%;
     transition: background-color 0.3s;
+    box-sizing: border-box;
 }
 
-.signup-container button:hover {
+.signup-container button:hover,
+.signup-btn:hover {
     background-color: limegreen;
 }
 
