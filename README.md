@@ -5,6 +5,8 @@ A comprehensive web-based ERP system for managing students, academics, and finan
 
 ![html,css,php,mysql,github](https://skillicons.dev/icons?i=html,css,php,mysql,github)
 
+[![Live Site](https://img.shields.io/badge/Visit-Live%20Website-brightgreen)](https://campusflows.infinityfreeapp.com/)
+
 ## ✨ Features
 
 - 🔐 Secure login and registration system
